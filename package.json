@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "demo": "npm run db:demo && next dev",
+    "demo": "npm install --no-audit --no-fund && npm run db:demo && next dev",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

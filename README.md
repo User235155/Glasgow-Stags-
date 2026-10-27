@@ -20,12 +20,19 @@ Fixtures, results and news come straight from the admin, so entering a score upd
 | Enquiries | People who filled in the Join form; one click adds them to the roster |
 | Settings | Heja and Stripe connections |
 
-## Try it on your computer
+## Run it
 
-You need [Node.js](https://nodejs.org) (the LTS version). Then, in a terminal inside this folder:
+**Option A: in your browser, nothing to install.** Open
+**[codespaces.new/User235155/Glasgow-Stags-](https://codespaces.new/User235155/Glasgow-Stags-)** and click
+**Create codespace** (or on the repo page: **Code → Codespaces → Create codespace on main**). Wait a minute or two
+while it sets up; the site then opens in a new tab. Add `/admin`
+to that tab's address for the committee area (password `stags-demo`). Codespaces is free for a limited number of
+hours a month on personal GitHub accounts. Stop the codespace when you're done.
+
+**Option B: on your computer.** Install [Node.js](https://nodejs.org) (the LTS version), download or clone this
+repo, open a terminal in the folder, and run:
 
 ```bash
-npm install
 npm run demo
 ```
 
