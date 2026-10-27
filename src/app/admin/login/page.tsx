@@ -30,7 +30,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <form action={login} className="aform">
             {usingDevPassword() && (
               <div className="callout">
-                Local demo — the password is <code>{DEV_PASSWORD}</code>. Set <code>ADMIN_PASSWORD</code> before going
+                Demo login — the password is <code>{DEV_PASSWORD}</code>. Set <code>ADMIN_PASSWORD</code> before going
                 live.
               </div>
             )}

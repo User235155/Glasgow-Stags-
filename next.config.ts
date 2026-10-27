@@ -1,16 +1,15 @@
 import type { NextConfig } from "next";
+import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
-// In GitHub Codespaces the site is opened through a forwarded URL, which Next
-// would otherwise reject as a cross-site form submission.
-const codespaceOrigin =
-  process.env.CODESPACE_NAME && process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN
-    ? `${process.env.CODESPACE_NAME}-3000.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
-    : null;
-
-const nextConfig: NextConfig = {
-  // libSQL ships a native binary for local SQLite files; keep it out of the bundle.
-  serverExternalPackages: ["@libsql/client", "libsql"],
-  experimental: codespaceOrigin ? { serverActions: { allowedOrigins: [codespaceOrigin] } } : {},
-};
-
-export default nextConfig;
+export default function config(phase: string): NextConfig {
+  return {
+    // libSQL ships a native binary for local SQLite files; keep it out of the bundle.
+    serverExternalPackages: ["@libsql/client", "libsql"],
+    // When the dev server is opened through a GitHub Codespaces URL or a VS Code
+    // "forward port" link, Next would otherwise reject every form as cross-site.
+    experimental:
+      phase === PHASE_DEVELOPMENT_SERVER
+        ? { serverActions: { allowedOrigins: ["*.app.github.dev", "**.devtunnels.ms"] } }
+        : {},
+  };
+}

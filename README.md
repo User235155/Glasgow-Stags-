@@ -42,8 +42,27 @@ password is `stags-demo`. Press `Ctrl+C` in the terminal to stop it.
 `npm run demo` loads made-up sample data the first time. To start with an empty club, delete `data/stags.db` and
 run `npm run dev` instead.
 
-The `stags-demo` password only works in local dev mode. A real deployment refuses all logins until you set
-`ADMIN_PASSWORD` (see `.env.example`).
+The `stags-demo` password only works locally and on the demo link below. Once a real database is connected, the
+site refuses all logins until you set `ADMIN_PASSWORD` (see `.env.example`).
+
+## Share a preview link
+
+**A link that works any time (Vercel, free):**
+
+1. Go to [vercel.com](https://vercel.com), click **Sign Up**, and continue with GitHub (pick the free Hobby plan).
+2. Click **Add New… → Project**, find **Glasgow-Stags-**, and click **Import**. If it isn't listed, use
+   "Adjust GitHub App Permissions" to let Vercel see it.
+3. Don't change any settings. Click **Deploy** and wait a couple of minutes.
+4. Copy the address under **Domains** on the project page (something like `glasgow-stags.vercel.app`) and send it.
+
+With no database connected, the site runs as a **demo**: it fills itself with the made-up sample data, shows a
+"preview" strip at the top, and the committee area uses the password `stags-demo`. Changes made in the demo don't
+last; it resets now and then. Every push to GitHub updates the link automatically.
+
+**A quick link while your computer is running it (VS Code):** with `npm run demo` running, open the **Ports**
+panel (next to Terminal) and click **Forward a Port**. Enter `3000`, sign in with GitHub if asked, then
+right-click the port and choose **Port Visibility → Public**. Copy the **Forwarded Address**. It works until you
+close VS Code.
 
 ## Before launch: things to confirm
 
@@ -86,11 +105,13 @@ assign. Recording a payment twice is safe: each Stripe session is recorded once 
 
 ## Deploying
 
-The easiest free setup is **Vercel** (hosting) with **Turso** (database):
+To use it for real, turn the demo link into the club's site by connecting **Turso** (free database):
 
-1. Push this folder to a GitHub repo and import it into Vercel.
-2. Create a Turso database. Set `DATABASE_URL=libsql://…` and `DATABASE_AUTH_TOKEN` in Vercel.
-3. Set `ADMIN_PASSWORD`, `SITE_URL`, and the Stripe keys if you use them.
+1. Import the repo into Vercel as above.
+2. Create a Turso database. Set `DATABASE_URL=libsql://…` and `DATABASE_AUTH_TOKEN` in Vercel → Settings →
+   Environment Variables. Turso's Vercel integration, which sets `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN`,
+   also works. Demo mode then switches off and the database starts empty.
+3. Set `ADMIN_PASSWORD`, `SITE_URL`, and the Stripe keys if you use them, then redeploy.
 4. Point `glasgowstags.com` at Vercel. Redirect `glasgowstags.co.uk` to it too, so search engines see one site.
 
 ## Security & privacy

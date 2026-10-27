@@ -19,6 +19,23 @@
   left: 8px;
 }
 
+.demo-strip {
+  background: var(--gold);
+  color: var(--gold-ink);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 550;
+  padding: 8px 16px;
+}
+.demo-strip a {
+  font-weight: 700;
+}
+.demo-strip code {
+  background: rgba(26, 20, 0, 0.1);
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+
 /* ---- Brand ---- */
 .brand {
   display: inline-flex;

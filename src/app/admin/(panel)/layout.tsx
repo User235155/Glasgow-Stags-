@@ -1,7 +1,7 @@
 import Link from "next/link";
 import "../../(site)/site.css";
 import { requireAdmin } from "@/lib/auth";
-import { getSetting, one } from "@/lib/db";
+import { getSetting, isDemoDeployment, one } from "@/lib/db";
 import { Brand } from "@/components/Brand";
 import { AdminNav, type NavItem } from "@/components/AdminNav";
 import { logout } from "../actions";
@@ -53,7 +53,14 @@ export default async function PanelLayout({ children }: { children: React.ReactN
       <main className="admin-main">
         {demo === "1" && (
           <p className="callout" style={{ marginBottom: 18 }}>
-            You&apos;re looking at <strong>made-up demo data</strong>. Delete <code>data/stags.db</code> to start fresh.
+            You&apos;re looking at <strong>made-up demo data</strong>.{" "}
+            {isDemoDeployment() ? (
+              <>Feel free to click around and change things — this demo resets from time to time.</>
+            ) : (
+              <>
+                Delete <code>data/stags.db</code> to start fresh.
+              </>
+            )}
           </p>
         )}
         {children}

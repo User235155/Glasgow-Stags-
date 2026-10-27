@@ -1,6 +1,8 @@
 import { createClient, type Client, type InValue } from "@libsql/client";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
+import { seedDemo } from "./demo-seed";
 
 // Dates are stored as Glasgow wall-clock strings ("2026-10-27T21:30") so they
 // sort as text and display without timezone surprises. Money is integer pence.
@@ -121,14 +123,30 @@ CREATE TABLE IF NOT EXISTS settings (
 
 let clientPromise: Promise<Client> | null = null;
 
+/**
+ * Deployed to Vercel without a database: run as a self-contained demo with
+ * sample data in temporary storage. Changes there don't last, so connect a
+ * real database (DATABASE_URL) before the club uses it.
+ */
+export function isDemoDeployment(): boolean {
+  return Boolean(process.env.VERCEL) && !process.env.DATABASE_URL && !process.env.TURSO_DATABASE_URL;
+}
+
 async function init(): Promise<Client> {
-  const url = process.env.DATABASE_URL || "file:data/stags.db";
+  const demo = isDemoDeployment();
+  // TURSO_* are the names Turso's own Vercel integration sets.
+  const url =
+    process.env.DATABASE_URL ||
+    process.env.TURSO_DATABASE_URL ||
+    (demo ? `file:${path.join(os.tmpdir(), "stags-demo.db")}` : "file:data/stags.db");
+  const authToken = process.env.DATABASE_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN || undefined;
   if (url.startsWith("file:")) {
     fs.mkdirSync(path.dirname(path.resolve(url.slice(5))), { recursive: true });
   }
-  const client = createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN || undefined });
+  const client = createClient({ url, authToken });
   await client.execute("PRAGMA foreign_keys = ON");
   await client.executeMultiple(SCHEMA);
+  if (demo) await seedDemo(client);
   return client;
 }
 

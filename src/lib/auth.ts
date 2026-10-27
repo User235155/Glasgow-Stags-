@@ -2,21 +2,22 @@ import "server-only";
 import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { isDemoDeployment } from "./db";
 
 const COOKIE = "stags_admin";
 const MAX_AGE_S = 60 * 60 * 24 * 14;
 
-// Lets `npm run dev` work out of the box. Never used by `next start` / deploys,
-// which always need ADMIN_PASSWORD.
+// Lets `npm run dev` and the sample-data demo deployment work out of the box.
+// A deploy with a real database always needs ADMIN_PASSWORD.
 export const DEV_PASSWORD = "stags-demo";
+
+export function usingDevPassword(): boolean {
+  return !process.env.ADMIN_PASSWORD && (process.env.NODE_ENV === "development" || isDemoDeployment());
+}
 
 function adminPassword(): string | null {
   if (process.env.ADMIN_PASSWORD) return process.env.ADMIN_PASSWORD;
-  return process.env.NODE_ENV === "development" ? DEV_PASSWORD : null;
-}
-
-export function usingDevPassword(): boolean {
-  return !process.env.ADMIN_PASSWORD && process.env.NODE_ENV === "development";
+  return usingDevPassword() ? DEV_PASSWORD : null;
 }
 
 function secret(): string | null {

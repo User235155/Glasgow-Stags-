@@ -3,6 +3,7 @@ import "./site.css";
 import { Brand } from "@/components/Brand";
 import { club } from "@/content/club";
 import { stripeConfigured } from "@/lib/stripe";
+import { isDemoDeployment } from "@/lib/db";
 
 const NAV = [
   { href: "/join", label: "Join" },
@@ -18,6 +19,12 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <a href="#main" className="skip">
         Skip to content
       </a>
+      {isDemoDeployment() && (
+        <div className="demo-strip">
+          Preview of a proposed new {club.name} website, with made-up sample data.{" "}
+          <Link href="/admin">Try the committee area</Link> (password <code>stags-demo</code>)
+        </div>
+      )}
       <header className="site-header">
         <div className="wrap header-row">
           <Link href="/" className="brand-link" aria-label={`${club.name} home`}>
